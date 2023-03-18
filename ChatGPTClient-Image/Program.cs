@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using OpenAI.GPT3.Extensions;
 
 namespace ChatGPTClient_Image
 {
@@ -12,6 +13,13 @@ namespace ChatGPTClient_Image
             // Add services to the container.
             builder.Services.AddRazorPages();
             builder.Services.AddServerSideBlazor();
+
+            // Register Services
+            builder.Configuration.AddJsonFile(
+                   "appsettings.json", optional: true, reloadOnChange: true
+               ).AddEnvironmentVariables();
+
+            builder.Services.AddOpenAIService();
 
             var app = builder.Build();
 

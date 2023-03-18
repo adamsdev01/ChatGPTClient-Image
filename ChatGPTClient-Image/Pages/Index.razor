@@ -1,4 +1,85 @@
 ﻿@page "/"
 
 <PageTitle>Index</PageTitle>
+<br />
+<h2 style="text-align:center"><b>GPT3 Model - DALL-E</b></h2>
+<h4 style="text-align:center"><b>OpenAI Images API</b></h4>
+<br />
+<div class="container">
+    <h5><b>Given a prompt, the model will return a generated image or images.</b></h5>
+</div>
 
+<div class="container">
+    <input class="form-control" type="text" @bind="prompt" />
+    <br />
+    <button class="btn btn-primary" @onclick="CallService">SUBMIT</button>
+    <br />
+    <br />
+    <br />
+    <br />
+    <label><b>ORIGINAL IMAGE(S)</b></label>
+    <p>@response</p>
+    <p>@((MarkupString)ImageResponse)</p>
+    <br />
+    <br />
+    <br />
+    <br />
+</div>
+<br />
+<br />
+
+@code {
+    string Organization = "";
+    string ApiKey = "";
+    string prompt = "";
+    string response = "";
+    string ImageResponse = "";
+
+    protected override void OnInitialized()
+    {
+        Organization = _configuration["OpenAIServiceOptions:Organization"] ?? "";
+        ApiKey = _configuration["OpenAIServiceOptions:ApiKey"] ?? "";
+        prompt = "Basquiat style painting of an alien ";
+        prompt = prompt + "on a horse, 4k, ";
+        prompt = prompt + "high resolution, trending in artstation";
+    }
+
+    public async Task CallService()
+    {
+        // Gets OrganizationID and APIKey from secrets
+        var openAiService = new OpenAIService(new OpenAiOptions()
+        {
+            ApiKey = ApiKey,
+            Organization = Organization
+        });
+
+        // Pass a string prompt to the service
+        var imageResult = await openAiService.Image.CreateImage(new ImageCreateRequest()
+        {
+            Prompt = prompt,
+            N = 2,
+            Size = StaticValues.ImageStatics.Size.Size256,
+            ResponseFormat = StaticValues.ImageStatics.ResponseFormat.Url,
+            User = "TestUser"
+        });
+
+        // Return result or error message
+        if (imageResult.Successful)
+        {
+            response = "";
+            foreach (var image in imageResult.Results)
+            {
+                ImageResponse += $@"<img src=""{image.Url}"" />&nbsp;&nbsp;";
+            }
+        }
+        else
+        {
+            if (imageResult.Error == null)
+            {
+                response = "Unknow Error";
+            }
+
+            response = $"{imageResult.Error?.Code}: {imageResult.Error?.Message}";
+        }
+    }
+}

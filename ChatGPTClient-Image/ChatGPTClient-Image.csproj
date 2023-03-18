@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>ChatGPTClient_Image</RootNamespace>
+    <UserSecretsId>ef0e6e85-9fb9-40f1-a689-22c7bd71a5c9</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
