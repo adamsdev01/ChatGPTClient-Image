@@ -1,4 +1,4 @@
-GPT Image Generator
+# GPT-3 Image Generator
 ### Creating images from scratch based on a text prompt.
 #### Created a Blazor application that makes API calls to OpenAI GPT-3 Images API. In the app - the user submits a prompt to generate an image using DALL·E models
 # Stack
